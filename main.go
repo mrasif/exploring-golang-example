@@ -30,12 +30,16 @@ type accessor interface {
 	retrive(n int) person
 }
 
-func put(a accessor, n int, p person){
-	a.save(n,p)
+type personService struct {
+	db accessor
 }
 
-func get(a accessor, n int) person {
-	return a.retrive(n)
+func (s personService) put(n int, p person){
+	s.db.save(n,p)
+}
+
+func (s personService) get(n int) person {
+	return s.db.retrive(n)
 }
 
 func main() {
@@ -50,15 +54,21 @@ func main() {
 	p2 := person{
 		first: "Sam",
 	}
-	
-	put(dbm,1,p1)
-	put(dbm,2,p2)
-	fmt.Println(get(dbm,1))
-	fmt.Println(get(dbm,2))
 
-	put(dbp,1,p1)
-	put(dbp,2,p2)
-	fmt.Println(get(dbp,1))
-	fmt.Println(get(dbp,2))
+	s := service{
+		db:dbm,
+	}
+	
+	s.put(1,p1)
+	s.put(2,p2)
+	fmt.Println(s.get(1))
+	fmt.Println(s.get(2))
+
+	s.db=dbp
+
+	s.put(1,p1)
+	s.put(2,p2)
+	fmt.Println(s.get(1))
+	fmt.Println(s.get(2))
 	
 }
