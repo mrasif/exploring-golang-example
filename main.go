@@ -55,7 +55,7 @@ func main() {
 		first: "Sam",
 	}
 
-	s := service{
+	s := personService{
 		db:dbm,
 	}
 	
