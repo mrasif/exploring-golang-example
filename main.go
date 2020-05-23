@@ -2,42 +2,63 @@ package main
 
 import "fmt"
 
-type human interface {
-	speak()
-}
-
 type person struct {
 	first string
 }
 
-func (p person) speak() {
-	fmt.Println("from a person - this is my first name ",p.first)
+type mongo map[int]person
+type postgres map[int]person
+
+func (m mongo) save(n int, p person){
+	m[n]=p
 }
 
-type secretAgent struct {
-	person
-	ltk bool
+func (m mongo) retrive(n int) person {
+	return m[n]
 }
 
-func (sa secretAgent) speak() {
-	fmt.Println("I am secret agent - this is my name ",sa.first)
+func (pg postgres) save(n int, p person){
+	pg[n]=p
+}
+
+func (pg postgres) retrive(n int) person{
+	return pg[n]
+}
+
+type accessor interface {
+	save(n int, p person)
+	retrive(n int) person
+}
+
+func put(a accessor, n int, p person){
+	a.save(n,p)
+}
+
+func get(a accessor, n int) person {
+	return a.retrive(n)
 }
 
 func main() {
-	p1:= person{
+
+	dbm:=mongo{}
+	dbp:=postgres{}
+
+	p1 := person{
 		first: "Asif",
 	}
-	sa1 := secretAgent{
-		person: person{
-			first: "James",
-		},
-		ltk: true,
-	}
 
-	var x,y human
-	x=p1
-	y=sa1
-	x.speak()
-	y.speak()
+	p2 := person{
+		first: "Sam",
+	}
+	
+	put(dbm,1,p1)
+	put(dbm,2,p2)
+	fmt.Println(get(dbm,1))
+	fmt.Println(get(dbm,2))
+
+	put(dbp,1,p1)
+	put(dbp,2,p2)
+	fmt.Println(get(dbp,1))
+	fmt.Println(get(dbp,2))
 	
 }
