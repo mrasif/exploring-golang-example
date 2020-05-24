@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
+	architecture "github.com/mrasif/exploring-golang"
 	"github.com/mrasif/exploring-golang/models"
-	"github.com/mrasif/exploring-golang/services"
 	"github.com/mrasif/exploring-golang/storage/mongo"
 	"github.com/mrasif/exploring-golang/storage/postgres"
 )
@@ -25,20 +25,16 @@ func main() {
 		First: "Sam",
 	}
 
-	s := services.PersonService{
-		DB:dbm,
-	}
-	
-	s.Put(1,p1)
-	s.Put(2,p2)
-	fmt.Println(s.Get(1))
-	fmt.Println(s.Get(2))
+	ps:=architecture.NewPersonService(dbm)
 
-	s.DB=dbp
+	ps.Put(1,p1)
+	ps.Put(2,p2)
+	fmt.Println(ps.Get(1))
+	fmt.Println(ps.Get(2))
 
-	s.Put(1,p1)
-	s.Put(2,p2)
-	fmt.Println(s.Get(1))
-	fmt.Println(s.Get(2))
+	architecture.Put(dbp,1,p1)
+	architecture.Put(dbp,2,p2)
+	fmt.Println(architecture.Get(dbp,1))
+	fmt.Println(architecture.Get(dbp,2))
 	
 }
